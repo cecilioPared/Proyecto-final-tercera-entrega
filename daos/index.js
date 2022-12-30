@@ -1,5 +1,6 @@
 let productosDao
 let carritosDao
+let usuariosDao
 
 switch (process.env.PERSISTENCIA) {
     case 'json':
@@ -12,9 +13,11 @@ switch (process.env.PERSISTENCIA) {
     case 'mongodb':        
         const { default: ProductosDaoMongoDb } = await import('./productos/ProductosDaoMongoDb.js')
         const { default: CarritosDaoMongoDb } = await import('./carritos/CarritosDaoMongoDb.js')
+        const { default: UsuariosDaoMongoDb } = await import('./usuarios/UsuariosDaoMongoDb.js')
 
         productosDao = new ProductosDaoMongoDb()
         carritosDao = new CarritosDaoMongoDb()
+        usuariosDao = new UsuariosDaoMongoDb()
         break
         case 'firebasedb':        
         const { default: ProductosDaoFireBaseDb } = await import('./productos/ProductosDaoFireBaseDb.js')
@@ -32,4 +35,4 @@ switch (process.env.PERSISTENCIA) {
         carritosDao = new CarritosDaoMem()
 }
 
-export { productosDao, carritosDao }
+export { productosDao, carritosDao, usuariosDao }

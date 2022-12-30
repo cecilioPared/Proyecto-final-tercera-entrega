@@ -1,14 +1,45 @@
 import express from 'express'
-import http from 'http'
+import session from 'express-session'
+import passport from 'passport'
+import path from "path";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
+import hbs from "hbs";
 import routers from './routes/index.js'
+import viewRouter from './routes/view.js';
 
 import { errorHandler } from './utils/errorHandler.js'
 import validarRecurso  from './middlewares/validar-ruta.js'
+import  authenticateUser from './middlewares/passport.js'
+import logger from './utils/LoggerHandler.js'
+
 const app = express()
+
+authenticateUser(passport)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "html");
+app.engine("html", hbs.__express);
+
+app.use(cookieParser(process.env.SECRET));
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false, 
+  saveUninitialized: false,
+}));
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use('/api', routers)
+app.use("/", viewRouter)
+
 app.use(errorHandler)
 app.use(validarRecurso)
 

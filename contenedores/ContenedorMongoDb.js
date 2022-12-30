@@ -39,6 +39,23 @@ class ContenedorMongoDb {
         }  
     }
 
+    async obtenerPorCriterio(query = {}){
+        const criterio = query
+        try {
+            console.log('intentando buscar elemento  mongodb',query);
+            
+            const obj = await this.collection.findOne(criterio)
+            console.log('elemento encontrado mongodb 2',obj);
+            if (!obj) {
+                throw new Error(`id ${query} no encontrado.`);         
+            }
+            return obj
+        } catch (error) {
+            console.log('ocurrio un error mongo', error.message)
+            throw new Error(error.message)      
+        }          
+    }
+
     async crear(obj){
         try {
             const result = await this.collection.create(obj)
