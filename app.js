@@ -2,6 +2,8 @@ import express from 'express'
 import session from 'express-session'
 import passport from 'passport'
 import path from "path";
+import cluster from 'cluster';
+import os from 'os';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
@@ -12,8 +14,23 @@ import viewRouter from './routes/view.js';
 import { errorHandler } from './utils/errorHandler.js'
 import validarRecurso  from './middlewares/validar-ruta.js'
 import  authenticateUser from './middlewares/passport.js'
-import logger from './utils/LoggerHandler.js'
+import logger from './utils/loggerHandler.js'
 
+const modoCluster = process.env.MODO_CLUSTER;
+
+if (modoCluster === 'true' && cluster.isPrimary) {
+      for (let i = 0; i < os.cpus().length; i++) {
+            cluster.fork();
+      }
+      cluster.on('exit', (worker, code, signal) => {
+            logger.info(
+                  `worker ${worker.process.pid} | code ${code} | signal ${signal}`
+            );
+            logger.info('Starting a new worker...');
+            cluster.fork();
+      });
+} 
+else {
 const app = express()
 
 authenticateUser(passport)
@@ -47,11 +64,12 @@ const PORT = process.env.NODE_PORT || 3000
 const ENV = process.env.NODE_ENV
 
 const server = app.listen(PORT, () => {
-    console.log(
+    logger.info(
       `Servidor http esta escuchando en el puerto ${server.address().port}`
     );
-    console.log(`http://localhost:${server.address().port}`);
-    console.log(`Environment:${ENV}`);
+    logger.info(`http://localhost:${server.address().port}`);
+    logger.info(`Environment:${ENV}`);
   });
   
-  server.on("error", (error) => console.log(`Error en servidor ${error}`));
+  server.on("error", (error) => logger.error(`Error en servidor ${error}`));
+}

@@ -2,7 +2,7 @@ import local_strategy from "passport-local"
 import { isValidPassword } from '../utils/handleEncrypt.js'
 import UsuariosController from '../controllers/usuarios.js'
 import { encryptPassword } from '../utils/handleEncrypt.js'
-import logger from '../utils/LoggerHandler.js'
+import logger from '../utils/loggerHandler.js'
 
 const LocalStrategy = local_strategy.Strategy
 
