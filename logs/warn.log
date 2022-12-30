@@ -1,3 +1,8 @@
-{"level":"warn","message":"Datos ingresados del usuario cecilio@gmail.com incorrectos."}
+{"level":"error","message":"Usuario nancy@gmail.com no encontrado."}
+{"level":"error","message":"Usuario nancy@gmail.com ya se encuentra registrado."}
+{"level":"error","message":"Error en metodo sign-up"}
+{"level":"error","message":"Usuario nancy@gmail.com no encontrado."}
+{"level":"error","message":"Error en metodo sign-up"}
+{"level":"error","message":"Error en metodo sign-up"}
 {"level":"error","message":"Error en metodo sign-up"}
 {"level":"error","message":"Error en metodo sign-up"}

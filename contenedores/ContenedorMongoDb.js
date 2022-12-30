@@ -45,9 +45,10 @@ class ContenedorMongoDb {
             console.log('intentando buscar elemento  mongodb',query);
             
             const obj = await this.collection.findOne(criterio)
-            console.log('elemento encontrado mongodb 2',obj);
+            console.log('elemento encontrado mongodb',obj);
             if (!obj) {
-                throw new Error(`id ${query} no encontrado.`);         
+                //throw new Error(`criterio ${criterio} no encontrado.`);         
+                return null
             }
             return obj
         } catch (error) {

@@ -1,8 +1,17 @@
 import { Router } from "express";
+import multer from 'multer';
 import UsuariosController from "../controllers/usuarios.js";
 import { encryptPassword } from "../utils/handleEncrypt.js";
 
 const router = Router();
+
+const storage = multer.diskStorage({
+  destination: './public/img/avatar',
+  filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage: storage });
 
 router.post("/", async (req, res, next) => {
   try {

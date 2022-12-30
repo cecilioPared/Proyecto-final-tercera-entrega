@@ -6,9 +6,9 @@ import logger from '../utils/LoggerHandler.js'
 
 const LocalStrategy = local_strategy.Strategy
 
-const customFields = {
+const customFields = {    
     usernameField: 'email',
-    passwordField: 'password',
+    passwordField: 'password'    
 }
 
 const verifyCallback = async (email, password, done) => {    
@@ -33,23 +33,24 @@ const verifyCallback = async (email, password, done) => {
 }
 
 const registerCallback = async (req, email, password, done) => {
-  
+  console.log('request',req.body);
   await UsuariosController.obtenerPorCriterio({ email })    
   .then(async user => {    
     if (user) {
-      logger.warn(
+      logger.error(
         `Usuario ${email} ya se encuentra registrado.`
       );
       return done(null, false)
     }
-
-    req.body.avatar = `../img/avatar/${req.file.filename}`;
+    console.log('usuario no encontrado',user);   
+    //req.body.avatar = `../img/avatar/${request.file.filename}`;
 
     const newUser = {
       ...req.body,
+      avatar: `../img/avatar/${req.filename}`,
       password: encryptPassword(password),
     };
-
+    console.log('request modificado',req.body);
     return await UsuariosController.crear(newUser);   
   })
   .then((newUser) => {
@@ -74,7 +75,8 @@ const authenticateUser = (passport) => {
 
     passport.use('sign-in',new LocalStrategy(customFields, verifyCallback))
 
-    passport.use('sign-up',new LocalStrategy(customFields,registerCallback))
+    passport.use('sign-up',new LocalStrategy({  usernameField: 'email',
+    passReqToCallback: true },registerCallback))
 
     
     passport.serializeUser((user, done) => done(null, user._id))
