@@ -15,6 +15,18 @@ router.post(
   }
 );
 
+router.post(
+  "/sign-up",
+  passport.authenticate("sign-up", {
+    successRedirect: "/private",
+    failureRedirect: "/error-login",
+    failureMessage: true    
+  }),
+  (req, res) => {    
+    res.redirect("/private");
+  }
+);
+
 router.post("/sign-out", (req, res, next) => {
   const { user } = req;
   req.logout((error) => {

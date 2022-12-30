@@ -14,8 +14,8 @@
 {{#if isOk}}
   <p style="color:green">{{mensaje}}</p>
 {{/if}}
-<form action="/api/users" method="POST">
-  <input name="email" id="email" type="text" placeholder="ingrese su nombre..." required />
+<form action="/api/auth/sign-up" method="POST">
+  <input name="email" id="email" type="email" placeholder="ingrese su email..." required />
   <input name="password" id="password" type="password" placeholder="ingrese su password.." required />
   <input name="nombre" id="nombre" type="text" placeholder="ingrese su nombre..." required />
   <input name="direccion" id="direccion" type="text" placeholder="ingrese su domicilio..." required />
